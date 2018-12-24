@@ -16,11 +16,11 @@ open class PullToDismiss: NSObject {
         public static let dismissableHeightPercentage: CGFloat = 0.33
     }
 
-    open var backgroundEffect: BackgroundEffect? = ShadowEffect.default
-    open var edgeShadow: EdgeShadow? = EdgeShadow.default
+    @objc open var backgroundEffect: BackgroundEffect? = ShadowEffect.default
+    @objc open var edgeShadow: EdgeShadow? = EdgeShadow.default
 
-    public var dismissAction: (() -> Void)?
-    public weak var delegate: UIScrollViewDelegate? {
+    @objc public var dismissAction: (() -> Void)?
+    @objc public weak var delegate: UIScrollViewDelegate? {
         didSet {
             var delegates: [UIScrollViewDelegate] = [self]
             if let delegate = delegate {
@@ -29,7 +29,7 @@ open class PullToDismiss: NSObject {
             proxy = ScrollViewDelegateProxy(delegates: delegates)
         }
     }
-    public var dismissableHeightPercentage: CGFloat = Defaults.dismissableHeightPercentage {
+    @objc public var dismissableHeightPercentage: CGFloat = Defaults.dismissableHeightPercentage {
         didSet {
             dismissableHeightPercentage = min(max(0.0, dismissableHeightPercentage), 1.0)
         }
@@ -52,7 +52,7 @@ open class PullToDismiss: NSObject {
     private var backgroundView: UIView?
     private var navigationBarHeight: CGFloat = 0.0
     private var blurSaturationDeltaFactor: CGFloat = 1.8
-    convenience public init?(scrollView: UIScrollView) {
+    @objc convenience public init?(scrollView: UIScrollView) {
         guard let viewController = type(of: self).viewControllerFromScrollView(scrollView) else {
             print("a scrollView must be on the view controller.")
             return nil
@@ -60,7 +60,7 @@ open class PullToDismiss: NSObject {
         self.init(scrollView: scrollView, viewController: viewController)
     }
 
-    public init(scrollView: UIScrollView, viewController: UIViewController, navigationBar: UIView? = nil) {
+    @objc public init(scrollView: UIScrollView, viewController: UIViewController, navigationBar: UIView? = nil) {
         super.init()
         self.proxy = ScrollViewDelegateProxy(delegates: [self])
         self.__scrollView = scrollView
@@ -234,7 +234,7 @@ extension PullToDismiss: UICollectionViewDelegateFlowLayout {
 }
 
 extension PullToDismiss: UIScrollViewDelegate {
-    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+   @objc public func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if dragging {
             let diff = -(scrollView.contentOffset.y - previousContentOffsetY)
             if scrollView.contentOffset.y < -scrollView.contentInset.top || (targetViewController?.view.frame.origin.y ?? 0.0) > 0.0 {
@@ -245,13 +245,13 @@ extension PullToDismiss: UIScrollViewDelegate {
         }
     }
 
-    public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+  @objc  public func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
         startDragging()
         dragging = true
         previousContentOffsetY = scrollView.contentOffset.y
     }
 
-    public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+  @objc  public func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         finishDragging(withVelocity: velocity)
         dragging = false
         previousContentOffsetY = 0.0
